@@ -79,10 +79,13 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
 
     for idx, i in enumerate(denses):
         dense = tf.layers.dense(dense, i, tf.nn.relu, reuse=reuse_mode, name="dense_n%d%s" % (idx, name_appx))
-
+     
+    # ?? dense = [-1, lqxlg]
+    # output = 1 > 이게 final ranking score    
+    #  [-1, lqxlg] >  [-1, 1]
     dout = tf.layers.dense(dense, 1, reuse=reuse_mode, name="dense_out%s" % name_appx)
+    #    [-1, lqxlg] > [-1, 1] > [-1] # 각 batch 별 score가 나옴.
     out = tf.squeeze(dout, axis=1, name="output"+name_appx)
-
     return out
 
 # build our network
