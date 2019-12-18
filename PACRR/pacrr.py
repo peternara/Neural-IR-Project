@@ -77,6 +77,13 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
     return out
 
 # build our network
+# train.ipynb에서 호출
+#   lq = 10
+#   ld = 20
+#   lf = 32
+#   lg = 3
+#   k = 3
+#   lr = 0.01
 def build(lq, ld, lf, lg, k=3, denses=[32, 32], lr=0.01, opt='sgd'):
     # placeholders for positive and negative doc similarity matrices
     yp = tf.placeholder(tf.float32, (None, lq, ld), name=yp_name)
