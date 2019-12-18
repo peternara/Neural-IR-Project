@@ -62,13 +62,16 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
 
         # ?? (-1, lq, ld, lf) >  (-1, lq, lf, ld) > max pooling하게 위해 이렇게 ...
         conv = tf.transpose(conv, perm=(0, 1, 3, 2)) 
-        pool = tf.layers.max_pooling2d(conv, pool_size=(1, lf), strides=(1, lf), padding="valid",
-                                       name="maxpool2d_"+dim_name)
+        # ?? (-1, lq, lf, ld) > max_pooling2d >  (-1, lq, 1, ld)  
+        pool = tf.layers.max_pooling2d(conv, pool_size=(1, lf), strides=(1, lf), padding="valid",  name="maxpool2d_"+dim_name)
 
         pool = tf.reshape(pool, (-1, lq, ld))
-
-        kmaxpool = tf.nn.top_k(tf.slice(pool, [0, 0, 0], [-1, -1, poses[0]]), k=k,
-                               sorted=True)[0]
+         
+        # ? poses >  poses[0] = ld 
+        # ?? k > top k
+        # 각 lq > pool'ld(=20) 중 top k
+        kmaxpool = tf.nn.top_k(tf.slice(pool, [0, 0, 0], [-1, -1, poses[0]]), k=k, sorted=True)[0]
+        # ?? kmaxpool의 0(=kmaxpool[0]) 이니, top 1만...
         kmaxpools.append(kmaxpool)
 
     pooled = tf.concat(kmaxpools, -1)
