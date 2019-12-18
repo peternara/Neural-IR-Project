@@ -80,7 +80,7 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
 # train.ipynb에서 호출
 #   lq = 10
 #   ld = 20
-#   lf = 32
+#   lf = 32 > tf.layers.conv2d's output channel
 #   lg = 3
 #   k = 3
 #   lr = 0.01
