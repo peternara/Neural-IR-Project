@@ -54,7 +54,7 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
     reuse_mode = tf.AUTO_REUSE if reuse else None
 
     kmaxpools = []
-    for i in range(1, lg + 1):
+    for i in range(1, lg + 1): # kernel size > increasing...
         dim_name = "%dx%d%s" % (i, i, name_appx)
         conv = tf.layers.conv2d(x_r, lf, kernel_size=(i, i), strides=(1, 1), padding="same", use_bias=True,
                                 activation=tf.nn.relu, kernel_initializer=tf.glorot_uniform_initializer(),
