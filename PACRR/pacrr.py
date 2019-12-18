@@ -40,6 +40,11 @@ def load(sess, file):
 
 # Get main part of network.
 # since we need to insert two scripts for training, variable reusing is required.
+#   lq = 10
+#   ld = 20
+#   lf = 32 > tf.layers.conv2d's output channel
+#   lg = 3
+# x_r : (-1, lq, ld, 1) > query & doc 사이의 term relation (similarity?) matrix
 def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
     if name_appx != "":
         name_appx = "_" + name_appx
@@ -55,7 +60,8 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
                                 activation=tf.nn.relu, kernel_initializer=tf.glorot_uniform_initializer(),
                                 reuse=reuse_mode, name="conv_"+dim_name)
 
-        conv = tf.transpose(conv, perm=(0, 1, 3, 2))
+        # ?? (-1, lq, ld, lf) >  (-1, lq, lf, ld) > max pooling하게 위해 이렇게 ...
+        conv = tf.transpose(conv, perm=(0, 1, 3, 2)) 
         pool = tf.layers.max_pooling2d(conv, pool_size=(1, lf), strides=(1, lf), padding="valid",
                                        name="maxpool2d_"+dim_name)
 
