@@ -71,7 +71,9 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
         # ?? k > top k
         # 각 lq > pool'ld(=20) 중 top k
         kmaxpool = tf.nn.top_k(tf.slice(pool, [0, 0, 0], [-1, -1, poses[0]]), k=k, sorted=True)[0]
-        # ?? kmaxpool의 0(=kmaxpool[0]) 이니, top 1만...
+        # 주의) kmaxpool의 0(=kmaxpool[0]) 이니, top 1만...이 아니라..
+        # val, idx 을 리턴하는데, val 만 취하겠다는 의미.!!!!
+        
         kmaxpools.append(kmaxpool)
 
     pooled = tf.concat(kmaxpools, -1)
