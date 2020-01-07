@@ -63,12 +63,10 @@ def get_doc_graph(x_r, lq, ld, lf, lg, denses, reuse=True, name_appx="", k=3):
         # ?? (-1, lq, ld, lf) >  (-1, lq, lf, ld) > max pooling하게 위해 이렇게 ...
         conv = tf.transpose(conv, perm=(0, 1, 3, 2)) 
         # ?? (-1, lq, lf, ld) > max_pooling2d >  (-1, lq, 1, ld)  
-        pool = tf.layers.max_pooling2d(conv, pool_size=(1, lf), strides=(1, lf), padding="valid",  name="maxpool2d_"+dim_name)
-        # ?? 위의 tf.transpose& tf.layers.max_pooling2d 조합이 이거랑 같이 않나? 
-        # pool = tf.reduce_max( conv, [1, 2], name='pool')
-
-
+        pool = tf.layers.max_pooling2d(conv, pool_size=(1, lf), strides=(1, lf), padding="valid",  name="maxpool2d_"+dim_name)    
         pool = tf.reshape(pool, (-1, lq, ld))
+        # ?? 위의 tf.transpose& tf.layers.max_pooling2d & tf.reshape 조합이 이거랑 같이 않나? 
+        # pool = tf.reduce_max( conv, [1, 2], name='pool') > squeeze해야할듯하지만..일단 연산은??
          
         # ? poses >  poses[0] = ld 
         # ?? k > top k
